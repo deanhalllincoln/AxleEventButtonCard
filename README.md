@@ -509,6 +509,119 @@ Tested with:
 
 ---
 
+# Testing the Card
+
+If you don't currently have an Axle VPP event scheduled, you can still confirm that the card has been installed correctly.
+
+The following tests temporarily change the state of the Axle sensors using Home Assistant's **Developer Tools**.
+
+> **Note**
+>
+> These changes are only temporary. The Axle VPP integration will automatically restore the correct values within a few seconds.
+> Its easier if you have two screens open at the same time (one Developer tools and one the dashboard showing the card)
+
+---
+
+## Test 1 - Simulate an Active Event
+
+This test confirms that the card displays correctly during an active Axle VPP event.
+
+### Step 1
+
+Open:
+
+**Developer Tools → States**
+
+### Step 2
+
+Locate the entity:
+
+```
+sensor.axle_event_in_progress
+```
+
+### Step 3
+
+Change the **State** from:
+
+```
+off
+```
+
+to
+
+```
+on
+```
+
+Then click **Set State**.
+
+<img width="524" height="207" alt="image" src="https://github.com/user-attachments/assets/7c396434-19ad-4223-9c21-3323903dbe03" />
+
+
+### Expected Result
+
+The card should immediately appear on your dashboard with:
+
+- 🟢 Green background
+- "Waiting for event data..." message (or no event information)
+- No countdown or event times
+
+This confirms that the card is correctly detecting an active event.
+
+After a few seconds, the Axle VPP integration will automatically change the sensor back to its real value and the card will disappear again.
+
+---
+
+## Test 2 - Simulate an Upcoming Event
+
+This test confirms that the card displays correctly before an event starts.
+
+### Step 1
+
+Open:
+
+**Developer Tools → States**
+
+### Step 2
+
+Locate the entity:
+
+```
+sensor.axle_event_window_state_2
+```
+
+### Step 3
+
+Change the **State** to:
+
+```
+upcoming
+```
+
+Then click **Set State**.
+
+<img width="513" height="199" alt="image" src="https://github.com/user-attachments/assets/0cb056db-368f-4501-b3ed-c2999b41d609" />
+
+
+### Expected Result
+
+The card should immediately appear with:
+
+- 🔵 Blue background
+- "No Event Planned" message 
+- No countdown or event times
+
+This confirms that the card is correctly detecting an upcoming event.
+
+After a few seconds, the Axle VPP integration will automatically restore the correct state and the card will disappear again.
+
+---
+
+## Successful Test
+
+If both tests behave as described, your Button Card has been installed correctly and is ready to display live Axle VPP events when they are received.
+
 # Support
 
 If you experience any issues or have suggestions for improvements, please open an issue on the GitHub repository.
