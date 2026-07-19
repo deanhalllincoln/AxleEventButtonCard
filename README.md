@@ -109,12 +109,14 @@ Designed to work perfectly on:
 
 # Requirements
 
+## Requirements
+
 Before installing this card you must have:
 
-- Home Assistant
-- Axle VPP Integration
-- Button Card (via HACS)
-- Card Mod (via HACS)
+- Home Assistant (Ideally on the latest or very recent version)
+- [Axle VPP Integration](https://github.com/deanhalllincoln/ha-axle-vpp) (via HACS)
+- [Button Card](https://github.com/custom-cards/button-card) (via HACS)
+- [Card Mod](https://github.com/thomasloven/lovelace-card-mod) (via HACS)
 
 ---
 
@@ -141,7 +143,29 @@ The card uses the following entities created by the Axle VPP Integration.
 
 > **Install Button Card from HACS**
 >
-> <img width="1551" height="418" alt="image" src="https://github.com/user-attachments/assets/48cdaac5-eb19-4cb5-a91b-239e3b11cb38" />
+> <img width="1582" height="347" alt="image" src="https://github.com/user-attachments/assets/73b14bf1-4824-4122-894c-068d99c0c878" />
+
+
+
+1. Open **HACS**
+2. Select **Dashboard**
+3. Click **Explore & Download Repositories**
+4. Search for:
+
+```
+Button Card
+```
+
+5. Install the card. ( For referance the Github repoository is https://github.com/custom-cards/button-card)
+6. Restart Home Assistant.
+
+---
+
+# Step 2 - Install Card-Mod (From Lovelace this allows greater control of styling for HA frontend)
+
+> **Install Card-Mod from HACS**
+>
+> <img width="1570" height="345" alt="image" src="https://github.com/user-attachments/assets/86ff8f61-199a-4081-8127-5b5216929c97" />
 
 
 1. Open **HACS**
@@ -150,15 +174,16 @@ The card uses the following entities created by the Axle VPP Integration.
 4. Search for:
 
 ```
-Button Card
+Card-Mod
 ```
 
-5. Install the card.
+5. Install the Card-Mod CSS styling . ( For referance the Github repoository is https://github.com/thomasloven/lovelace-card-mod)
 6. Restart Home Assistant.
 
 ---
 
-# Step 2 - Verify the Axle Sensors ( Iassume you have the Axle integration installed)
+
+# Step 3 - Verify the Axle Sensors ( Iassume you have the Axle integration installed)
 
 <img width="1300" height="748" alt="image" src="https://github.com/user-attachments/assets/54c7886a-fd67-4c12-9f57-a9f1754c843f" />
 
@@ -180,7 +205,7 @@ If any are missing, ensure the Axle VPP Integration has been installed correctly
 
 ---
 
-# Step 3 - Add the Card to your Dashboard
+# Step 4 - Add the Card to your Dashboard
 
 > **📷 Screenshot Placeholder – Edit Dashboard**
 >
@@ -194,7 +219,7 @@ If any are missing, ensure the Axle VPP Integration has been installed correctly
 
 ---
 
-# Step 4 - Paste the YAML
+# Step 5 - Paste the YAML
 
 <img width="699" height="571" alt="image" src="https://github.com/user-attachments/assets/0a754fa1-015a-4b11-9923-c5c7c6e1b61a" />
 
@@ -423,7 +448,7 @@ Click **Save**.
 
 ---
 
-# Step 5 - Finished! ( The card will only show in the dashboard when there is an event planned)
+# Step 6 - Finished! ( The card will only show in the dashboard when there is an event planned)
 
 The card will now operate automatically.
 
