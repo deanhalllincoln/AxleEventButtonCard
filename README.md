@@ -127,11 +127,11 @@ The card uses the following entities created by the Axle VPP Integration.
 | Entity | Description |
 |----------|-------------|
 | `sensor.axle_event_in_progress` | Indicates whether an event is active |
-| `sensor.axle_event_minutes_to_start_2` | Countdown until next event |
+| `sensor.axle_event_minutes_to_start` | Countdown until next event |
 | `sensor.axle_event_remaining_minutes` | Remaining event duration |
 | `sensor.axle_start_time_friendly` | Friendly event start time |
 | `sensor.axle_end_time_friendly` | Friendly event end time |
-| `sensor.axle_event_window_state_2` | Determines when the card is displayed |
+| `sensor.axle_event_window_state` | Determines when the card is displayed |
 
 ---
 
@@ -195,11 +195,11 @@ Open:
 Confirm the following entities exist.
 
 - `sensor.axle_event_in_progress`
-- `sensor.axle_event_minutes_to_start_2`
+- `sensor.axle_event_minutes_to_start`
 - `sensor.axle_event_remaining_minutes`
 - `sensor.axle_start_time_friendly`
 - `sensor.axle_end_time_friendly`
-- `sensor.axle_event_window_state_2`
+- `sensor.axle_event_window_state`
 
 If any are missing, ensure the Axle VPP Integration has been installed correctly.
 
@@ -239,7 +239,7 @@ variables:
   in_progress: |
     [[[ return states['sensor.axle_event_in_progress']?.state === 'on'; ]]]
   mins_to_start: >
-    [[[ return parseInt(states['sensor.axle_event_minutes_to_start_2']?.state ||
+    [[[ return parseInt(states['sensor.axle_event_minutes_to_start']?.state ||
     0); ]]]
   mins_remaining: >
     [[[ return parseInt(states['sensor.axle_event_remaining_minutes']?.state ||
@@ -271,7 +271,7 @@ custom_fields:
     [[[ 
       const inProgress = states['sensor.axle_event_in_progress']?.state === 'on';
 
-      const rawStart = states['sensor.axle_event_minutes_to_start_2']?.state;
+      const rawStart = states['sensor.axle_event_minutes_to_start']?.state;
       const rawRemain = states['sensor.axle_event_remaining_minutes']?.state;
 
       const minsToStart = parseInt(rawStart);
@@ -382,7 +382,7 @@ styles:
   card:
     - display: |
         [[[
-          const upcoming = states['sensor.axle_event_window_state_2']?.state === 'upcoming';
+          const upcoming = states['sensor.axle_event_window_state']?.state === 'upcoming';
           const active = states['sensor.axle_event_in_progress']?.state === 'on';
 
           return (upcoming || active) ? 'block' : 'none';
@@ -436,7 +436,7 @@ card_mod:
 
     ha-card {
       {% if is_state('sensor.axle_event_in_progress', 'off')
-         and states('sensor.axle_event_minutes_to_start_2')|int < 60 %}
+         and states('sensor.axle_event_minutes_to_start')|int < 60 %}
         animation: pulse 1.5s ease-in-out infinite;
         border: 1px solid rgba(255, 200, 0, 0.5);
       {% endif %}
@@ -492,8 +492,8 @@ The card automatically hides itself.
 
 | Problem | Solution |
 |----------|----------|
-| Card never appears | Verify `sensor.axle_event_window_state_2` is `upcoming` or `sensor.axle_event_in_progress` is `on`. |
-| Countdown missing | Check `sensor.axle_event_minutes_to_start_2` contains a numeric value. |
+| Card never appears | Verify `sensor.axle_event_window_state` is `upcoming` or `sensor.axle_event_in_progress` is `on`. |
+| Countdown missing | Check `sensor.axle_event_minutes_to_start` contains a numeric value. |
 | Start or end times missing | Verify `sensor.axle_start_time_friendly` and `sensor.axle_end_time_friendly`. |
 | Card displays errors | Confirm Button Card is installed and up to date. |
 
@@ -588,7 +588,7 @@ Open:
 Locate the entity:
 
 ```
-sensor.axle_event_window_state_2
+sensor.axle_event_window_state
 ```
 
 ### Step 3
