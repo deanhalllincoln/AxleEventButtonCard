@@ -9,8 +9,8 @@ The card automatically appears when an Axle event is scheduled, provides a live 
 # Features
 
 > **Completed Card**
->
-> <img width="270" height="153" alt="Screenshot_20260716_210024_Home Assistant" src="https://github.com/user-attachments/assets/74e9072e-8424-47b1-b012-470d27a8b453" />
+
+<img width="270" height="153" alt="image" src="https://github.com/user-attachments/assets/c321ff6f-9409-45ac-a7f2-42186013da9e" />
 
 
 
@@ -70,7 +70,7 @@ During the final **60 minutes** before an event begins, the card gently pulses t
 
 This provides an easy visual reminder that an event is about to start.
 
-<img width="270" height="154" alt="Screenshot_20260716_195605_Home Assistant" src="https://github.com/user-attachments/assets/323c9f3f-f5b2-4315-b4a6-710e29ad471e" /> <img width="270" height="153" alt="Screenshot_20260716_195637_Home Assistant" src="https://github.com/user-attachments/assets/8de22295-3926-4939-a045-4018ff52f7d4" />
+<img width="270" height="154" alt="image" src="https://github.com/user-attachments/assets/b54383c6-c2bb-4525-9bf4-60ea07e60ab3" /> <img width="270" height="154" alt="image" src="https://github.com/user-attachments/assets/1a78a94d-ed53-4fbe-bdd1-21aeb3d87158" />
 
 
 ---
@@ -91,8 +91,10 @@ Start: Tue 15 Jul 2026 18:00
 
 End:   Tue 15 Jul 2026 19:00
 ```
-<img width="270" height="155" alt="Screenshot_20260716_200054_Home Assistant" src="https://github.com/user-attachments/assets/35921f64-c0a7-45d5-849f-1ee1e36cd145" />
-Note: When the event is taking place the card says "Remaining"
+<img width="270" height="154" alt="image" src="https://github.com/user-attachments/assets/8d4fc3c6-79fc-407a-89d6-2daeb01e5fa4" />
+
+Note: When the event is taking place the card says "LIVE" and a bar moves across the card indicating time remaining
+
 
 ---
 
@@ -263,7 +265,13 @@ custom_fields:
         z-index:10;
         pointer-events:none;
       ">
-        <span style="color:#ffcc00;font-size:20px;line-height:1;">⚡</span>
+        <ha-icon icon="mdi:transmission-tower-export" style="
+          color: var(--warning-color);
+          width:22px;
+          height:22px;
+          --mdc-icon-size:22px;
+        ">
+        </ha-icon>
         <span>Axle Virtual Power Plant</span>
       </div>
     `; ]]]
@@ -313,8 +321,8 @@ custom_fields:
       if (inProgress && hasValidRemain) {
         return `
           <div style="width:100%;text-align:center;">
-            <div style="font-size:18px;font-weight:500;opacity:0.85;margin-bottom:6px;">
-              Remaining
+            <div style="font-size:16px;font-weight:600;opacity:0.85;margin-bottom:6px;letter-spacing:1px;">
+              LIVE
             </div>
             <div style="font-size:42px;font-weight:700;line-height:1;">
               ${formatDuration(minsRemaining)}
@@ -367,14 +375,53 @@ custom_fields:
 
       return `
         <div style="font-size:13px;opacity:0.85;line-height:1.5;">
-          <div style="display:flex;">
-            <div style="width:55px;">Start:</div>
-            <div>${start}</div>
+          <div style="display:flex;flex-wrap:wrap;">
+            <div style="flex:0 0 auto;margin-right:6px;">Start:</div>
+            <div style="flex:1 1 auto;min-width:0;">${start}</div>
           </div>
-          <div style="display:flex;">
-            <div style="width:55px;">End:</div>
-            <div>${end}</div>
+          <div style="display:flex;flex-wrap:wrap;">
+            <div style="flex:0 0 auto;margin-right:6px;">End:</div>
+            <div style="flex:1 1 auto;min-width:0;">${end}</div>
           </div>
+        </div>
+      `;
+    ]]]
+  progress: |
+    [[[
+      const active = states['sensor.axle_event_in_progress']?.state === 'on';
+
+      if (!active) return '';
+
+      const start = states['sensor.axle_start_time_friendly']?.state;
+      const end = states['sensor.axle_end_time_friendly']?.state;
+      const remainRaw = states['sensor.axle_event_remaining_minutes']?.state;
+
+      let percent = 0;
+
+      if (start && end && start !== 'unknown' && end !== 'unknown') {
+        const totalMins = (new Date(end) - new Date(start)) / 60000;
+        const remain = parseInt(remainRaw || 0);
+
+        if (totalMins > 0) {
+          percent = Math.min(100, Math.max(0, Math.round(((totalMins - remain) / totalMins) * 100)));
+        }
+      }
+
+      return `
+        <div style="
+          width:100%;
+          height:10px;
+          background:rgba(255,255,255,0.15);
+          border-radius:10px;
+          overflow:hidden;
+        ">
+          <div style="
+            width:${percent}%;
+            height:100%;
+            background:linear-gradient(90deg,#42a5f5,#66bb6a);
+            border-radius:10px;
+            transition:width 60s linear;
+          "></div>
         </div>
       `;
     ]]]
@@ -400,7 +447,7 @@ styles:
             : 'linear-gradient(135deg, #1a237e, #0b0f2a)';
         ]]]
   grid:
-    - grid-template-areas: "\"header\" \"timer\" \"times\""
+    - grid-template-areas: "\"header\" \"timer\" \"times\" \"progress\""
     - grid-template-columns: 1fr
     - justify-items: start
     - align-items: start
@@ -420,6 +467,11 @@ styles:
       - justify-self: start
       - margin-top: 10px
       - opacity: 0.85
+    progress:
+      - grid-area: progress
+      - width: 100%
+      - justify-self: stretch
+      - margin-top: 12px
 card_mod:
   style: |
     @keyframes pulse {
@@ -441,6 +493,7 @@ card_mod:
         border: 1px solid rgba(255, 200, 0, 0.5);
       {% endif %}
     }
+
 
 ```
 
@@ -556,7 +609,8 @@ on
 
 Then click **Set State**.
 
-<img width="524" height="207" alt="image" src="https://github.com/user-attachments/assets/7c396434-19ad-4223-9c21-3323903dbe03" />
+<img width="485" height="193" alt="image" src="https://github.com/user-attachments/assets/ee3d3d76-7398-49cd-8fac-18750c492106" />
+
 
 
 ### Expected Result
@@ -601,7 +655,7 @@ upcoming
 
 Then click **Set State**.
 
-<img width="513" height="199" alt="image" src="https://github.com/user-attachments/assets/0cb056db-368f-4501-b3ed-c2999b41d609" />
+<img width="488" height="196" alt="image" src="https://github.com/user-attachments/assets/c229b22b-6b6f-4f22-8753-e44878344953" />
 
 
 ### Expected Result
